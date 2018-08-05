@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import './foundation.min.css';
-import './fontawesome-free-5.0.13/web-fonts-with-css/css/fontawesome-all.css';
-import './fontawesome-free-5.0.13/web-fonts-with-css/css/fontawesome.min.css';
+import './fontawesome-free-5.0.13-2/web-fonts-with-css/css/fontawesome-all.css';
+import './fontawesome-free-5.0.13-2/web-fonts-with-css/css/fontawesome.min.css';
 import { Button } from 'react-bootstrap';
 
 
