@@ -4,7 +4,7 @@ Coding assignment for Zendesk. A tic-tac-toe webapp made with React.js.
 
 ### Installing
 
-Run the app locally with the following sequence of commands:
+Run the app locally with the following sequence of commands: (If you don't have npm/ node, intall them here: https://www.npmjs.com/get-npm)
 
 ```
 git clone https://github.com/Bijan-Massoumi/ZenDesk-Homework.git
