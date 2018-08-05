@@ -1,4 +1,4 @@
-# Project Title
+# Tic-Tac-Toe
 
 Coding assignment for Zendesk. A tic-tac-toe webapp made with React.js.
 
