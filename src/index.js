@@ -138,10 +138,15 @@ class Game extends React.Component {
             let newState = this.state.currentState.slice();
             newState[divNumber] = this.state.isXTurn ? 'X': 'O';
 
-            const currTurn = !this.state.isXTurn ? "X": "O";
             const winDict = this.checkWin(newState);
-            const newText = (winDict.isWinner) ? `${winDict.winner} is the Winner!`:
-                          `It's ${currTurn}'s turn.`;
+            let newText;
+            if ( !winDict.isWinner && newState.every( v => v !== null )) {
+                newText = "Draw!"
+            } else{
+                const currTurn = !this.state.isXTurn ? "X": "O";
+                newText = (winDict.isWinner) ? `${winDict.winner} is the Winner!`:
+                         `It's ${currTurn}'s turn.`;
+            }
 
             this.setState({pastStates: history, currentState: newState,
                             isXTurn: !this.state.isXTurn,infoText: newText,
@@ -159,6 +164,11 @@ class Game extends React.Component {
                             infoText: currTurn})
         }
     }
+    restart() {
+        this.setState({isXTurn: true, infoText:"X Goes First",
+        currentState: Array(this.size * this.size).fill(null),
+        pastStates: [], isGameFinished: false});
+    }
 
     render() {
         return (
@@ -170,11 +180,7 @@ class Game extends React.Component {
                         <Button bsSize="xsmall" className="option fas fa-undo"
                                 onClick={() => this.undo()}/>
                         <Button bsSize="xsmall" className="option restart"
-                                onClick={() => {
-                                    this.setState({isXTurn: true, infoText:"X Goes First",
-                                    currentState: Array(this.size * this.size).fill(null),
-                                    pastStates: [], isGameFinished: false});
-                                }} >
+                                onClick={() => this.restart()} >
                             New Game
                         </Button>
                     </div>
