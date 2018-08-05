@@ -67,7 +67,7 @@ class Board extends React.Component {
 class Game extends React.Component {
     constructor(props) {
         super(props)
-        this.size = 3;
+        this.size = 3; //changes board dimension (use odd numbers only)
         this.state = {
             currentState: Array(this.size * this.size).fill(null),
             pastStates: [],
@@ -80,30 +80,29 @@ class Game extends React.Component {
     checkWin(newState){
         /*
           I chose not to hard-code all win conditions to make the
-          Tic-Tac-Toe board scalable to 5 x 5, 7 x 7, etc.
+          Tic-Tac-Toe board scalable to a 5 x 5, 7 x 7, etc.
         */
 
         let len = this.state.currentState.length;
         let releventSquares = [];
         const allEqual = arr => arr.every( v => v === arr[0] );
 
-        //check diagonals
-        for (let i = 0; i < len; i += (this.size + Math.floor(this.size / 2))){
+        //check diagonals -----------------------------
+        for (let i = 0; i < len; i += (this.size + 1)){
             releventSquares.push(newState[i]);
         }
         if (allEqual(releventSquares) && releventSquares[0] !== null) {
             return {isWinner: true, winner: releventSquares[0]};
         }
         releventSquares = [];
-
-        for (let i = this.size-1; i < (len - this.size) + 1; i += (this.size - Math.floor(this.size / 2))){
+        for (let i = this.size-1; i < (len - this.size) + 1; i += (this.size - 1)){
             releventSquares.push(newState[i]);
         }
         if (allEqual(releventSquares) && releventSquares[0] !== null) {
             return {isWinner: true, winner: releventSquares[0]};
         }
 
-        //check columns
+        //check columns ------------------------------
         for (let i = 0; i < this.size; i++){
             releventSquares = [];
             for (let j = i; j < len; j += this.size){
@@ -115,7 +114,7 @@ class Game extends React.Component {
             }
         }
 
-        //check rows
+        //check rows ------------------------------------
         for (let i = 0; i < len; i += this.size){
             releventSquares = [];
             for (let j = i; j < i+this.size; j++){
@@ -156,14 +155,15 @@ class Game extends React.Component {
 
     undo(){
         if (this.state.pastStates.length > 0){
-            const currTurn = !this.state.isXTurn ? "It's X's Turn": "It's O's Turn";
+            const prevTurnText = !this.state.isXTurn ? "It's X's Turn": "It's O's Turn";
             let newHistory = this.state.pastStates.slice();
             let newState = newHistory.pop();
             this.setState({pastStates: newHistory, currentState: newState,
                             isGameFinished: false, isXTurn: !this.state.isXTurn,
-                            infoText: currTurn})
+                            infoText: prevTurnText})
         }
     }
+
     restart() {
         this.setState({isXTurn: true, infoText:"X Goes First",
         currentState: Array(this.size * this.size).fill(null),
