@@ -77,14 +77,87 @@ class Game extends React.Component {
         }
     }
 
+    checkWin(newState){
+        /*
+          I chose not to hard-code all win conditions to make the
+          Tic-Tac-Toe board scalable to 5 x 5, 7 x 7, etc.
+        */
+
+        let len = this.state.currentState.length;
+        let releventSquares = [];
+        const allEqual = arr => arr.every( v => v === arr[0] );
+
+        //check diagonals
+        for (let i = 0; i < len; i += (this.size + Math.floor(this.size / 2))){
+            releventSquares.push(newState[i]);
+        }
+        if (allEqual(releventSquares) && releventSquares[0] !== null) {
+            return {isWinner: true, winner: releventSquares[0]};
+        }
+        releventSquares = [];
+
+        for (let i = this.size-1; i < (len - this.size) + 1; i += (this.size - Math.floor(this.size / 2))){
+            releventSquares.push(newState[i]);
+        }
+        if (allEqual(releventSquares) && releventSquares[0] !== null) {
+            return {isWinner: true, winner: releventSquares[0]};
+        }
+
+        //check columns
+        for (let i = 0; i < this.size; i++){
+            releventSquares = [];
+            for (let j = i; j < len; j += this.size){
+                releventSquares.push(newState[j])
+            }
+            if (allEqual(releventSquares) && releventSquares[0] !== null) {
+                console.log("col condition",releventSquares);
+                return {isWinner: true, winner: releventSquares[0]};
+            }
+        }
+
+        //check rows
+        for (let i = 0; i < len; i += this.size){
+            releventSquares = [];
+            for (let j = i; j < i+this.size; j++){
+                releventSquares.push(newState[j]);
+            }
+            if (allEqual(releventSquares) && releventSquares[0] !== null) {
+                console.log("row condition",releventSquares);
+                return {isWinner: true, winner: releventSquares[0]};
+            }
+        }
+
+        return {isWinner: false, winner: null};
+    }
+
     handleMove(divNumber) {
-        const history = this.state.pastStates.slice()
-        let newState = this.state.currentState.slice();
+        if (!this.state.isGameFinished){
+            const history = this.state.pastStates.slice();
+            history.push(this.state.currentState.slice());
 
-        history.push(newState);
-        newState[divNumber] = this.state.isXTurn ? 'X': 'O';
+            let newState = this.state.currentState.slice();
+            newState[divNumber] = this.state.isXTurn ? 'X': 'O';
 
-        this.setState({pastStates: history, currentState: newState, isXTurn: !this.state.isXTurn})
+            const currTurn = !this.state.isXTurn ? "X": "O";
+            const winDict = this.checkWin(newState);
+            const newText = (winDict.isWinner) ? `${winDict.winner} is the Winner!`:
+                          `It's ${currTurn}'s turn.`;
+
+            this.setState({pastStates: history, currentState: newState,
+                            isXTurn: !this.state.isXTurn,infoText: newText,
+                            isGameFinished: winDict.isWinner});
+        }
+    }
+
+    undo(){
+        if (this.state.pastStates.length > 0){
+            const currTurn = !this.state.isXTurn ? "It's X's Turn": "It's O's Turn";
+            let newHistory = this.state.pastStates.slice();
+            let newState = newHistory.pop();
+            this.setState({pastStates: newHistory, currentState: newState,
+                            isGameFinished: false, isXTurn: !this.state.isXTurn,
+                            infoText: currTurn})
+        }
     }
 
     render() {
@@ -94,8 +167,14 @@ class Game extends React.Component {
                     <div className="row info-text">{this.state.infoText}</div>
                     <Board sendMove={(divNum) => this.handleMove(divNum)} currState={this.state.currentState}/>
                     <div className="row menu-controls">
-                        <Button bsSize="xsmall" className="option fas fa-undo"/>
-                        <Button bsSize="xsmall" className="option restart">
+                        <Button bsSize="xsmall" className="option fas fa-undo"
+                                onClick={() => this.undo()}/>
+                        <Button bsSize="xsmall" className="option restart"
+                                onClick={() => {
+                                    this.setState({isXTurn: true, infoText:"X Goes First",
+                                    currentState: Array(this.size * this.size).fill(null),
+                                    pastStates: [], isGameFinished: false});
+                                }} >
                             New Game
                         </Button>
                     </div>
@@ -121,8 +200,6 @@ class App extends React.Component {
         );
     }
 }
-
-
 
 ReactDOM.render(
     <App/>,
