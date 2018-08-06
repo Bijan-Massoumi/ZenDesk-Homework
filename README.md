@@ -1,6 +1,6 @@
 # Tic-Tac-Toe
 
-Coding assignment for Zendesk. A tic-tac-toe webapp made with React.js.
+Coding assignment for Zendesk. A tic-tac-toe webapp made with React.js. Live demo available at https://bijan-massoumi.github.io/
 
 ### Installing
 
@@ -13,6 +13,13 @@ npm install
 npm start
 ```
 
+### Features
+    - The game enforces the conditions of X's win, O's win, as well as the draw condition.
+    - The game allows for undo-ing one turn at a time. To do this, it stores all previous board states.
+    - The board can be scaled up to a 5 x 5, 7 x 7, etc simply editing the "size" member in the Game constructor.  
+    - The board can be reset at any time back to the original state.
+    - There is updated helping text at every turn to keep track of whose turn it is and whos won.
+    
 ## Built With
 
 * [React.js](https://reactjs.org/) - The web framework used
